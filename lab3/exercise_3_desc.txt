@@ -1,0 +1,8 @@
+In Computer systems company, User can buy laptop or desktop with attributes of 
+price, wights, company, with it there is also option
+to buy some basic accesorries such as keyboard, mouse and monitor which have 
+price, wirelessnes or with wire and color. Some computers might have OS pre installed
+but definitely has installed softwares for specific OS. For Desktop, user can choose any of components
+like memory, sound and video card while Laptop has only one option of choosing memory. 
+System should also checks if current Desktop componenets support installed software.
+Computer, accessories, softwares and components have price.
