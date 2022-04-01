@@ -1,0 +1,90 @@
+1)
+SELECT S.sname
+FROM Suppliers AS S, Parts P, Calalog C
+WHERE color='red' AND C.pid AND C.sid=S.sid
+
+2)
+SELECT S.sid
+FROM Parts P, Catalog C
+WHERE (P.color='red' OR P.color='green') AND P.sid=C.sid
+
+3)
+SELECT S.sid
+FROM Suppliers S
+WHERE S.address='221 Packer street'
+      OR S.sid IN (SELECT C.sid
+      		FROM Parts P, Catalog C	
+		WHERE P.color='red' AND P.pid=C.pid)
+
+4) 
+SELECT C.sid
+FROM Catalog C
+WHERE NOT EXISTS (SELECT P.pid
+		FROM Parts P
+		WHERE (color='red' OR color='green')
+		AND (NOT EXISTS (SELECT C1.sid
+				FROM Catalog C1
+				WHERE C1.sid=C.sid AND C1.pid=P.pid)))
+5) 
+SELECT C.sid
+FROM Catalog C
+WHERE (NOT EXISTS (SELECT P.pid
+		FROM Parts P
+		WHERE color='red'
+		AND (NOT EXISTS (SELECT C1.sid
+				FROM Catalog C1
+				WHERE C1.sid=C.sid AND C1.pid=P.pid))))
+
+	OR (NOT EXISTS (SELECT P1.pid
+		FROM Parts P1
+		WHERE color='green'
+		AND (NOT EXISTS (SELECT C2.sid
+				FROM Catalog C2
+				WHERE C2.sid=C.sid AND C2.pid=P1.pid))))
+
+6)
+SELECT C1.sid, C2.sid
+FROM Catalog C1, Catalog C2
+WHERE C1.pid=C2.pid AND C1.sid!=C2.sid and C1.cost>C2.cost
+
+7)
+SELECT C.pid
+FROM Catalog C
+WHERE EXISTS (SELECT C1.sid
+		FROM Catalog C1
+		WHERE C1.pid=C.pid AND C1.sid != C.sid)
+8) 
+
+
+
+9)
+SELECT C.sid
+FROM Catalog C, Suppliers S
+WHERE C.sid=S.sid AND C.cost >= ALL(SELECT C1.cost
+				FROM Catalog C1, Suppliers S1
+				WHERE C1.sid=S1.sid)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

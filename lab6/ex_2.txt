@@ -1,0 +1,9 @@
+4) 
+SELECT C.sid
+FROM Catalog C
+WHERE NOT EXISTS (SELECT P.pid
+		FROM Parts P
+		WHERE (color='red' OR color='green')
+		AND (NOT EXISTS (SELECT C1.sid
+				FROM Catalog C1
+				WHERE C1.sid=C.sid AND C1.pid=P.pid)))
