@@ -3,31 +3,52 @@ import psycopg2
 
 geolocator = Nominatim(user_agent="Mozilla/5.0")
 
-location = geolocator.geocode("1557 Ktahya Boulevard")
+
 
 conn = psycopg2.connect(database="vdrental", user="postgres",
                        password="8Rametago8", host="127.0.0.1", port="5432")
 
 cur = conn.cursor()
 
-#add_lat ='''ALTER TABLE address add column latitude float8'''
-#add_long = '''ALTER TABLE address add column longitude float8'''
 
-#cur.execute(add_lat)
-#cur.execute(add_long)
-#conn.commit()
+cur.callproc('filter_addresses', ())
 
+rows = cur.fetchall()
 
-cur.execute("INSERT INTO address (ID,Name,Address,review) VALUES ('"+fake.name()+"','"+fake.address()+"')")
-
-if location:
-    #print(location.address)
-    lat = location.latitude
-    long = location.longitude
-    
-else:
+for row in rows:
+    print(row[1]," - ",row[0])
     lat = 0
     long = 0
 
+    try:
+        location = geolocator.geocode(row[0])
+        #print(location.address)
+        lat = location.latitude
+        long = location.longitude
+    except:
+        lat = 0
+        long = 0
+    
+    print(lat, long)
 
-print(lat, long)
+    update_sql = "UPDATE address SET latitude = %s, longitude = %s WHERE address_id = %s"
+    val = (lat, long, row[1])
+
+    cur.execute(update_sql, val)
+    conn.commit()
+  
+
+sql = '''SELECT * FROM filter_addresses(), address
+WHERE address.address_id = filter_addresses.address_id'''
+
+cur.execute(sql)
+
+ans = cur.fetchall()
+
+for i in ans:
+    print(i)
+
+cur.close()
+conn.close()
+
+print("FINISHED!")
